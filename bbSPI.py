@@ -5,7 +5,7 @@ class bbSPI:
 	MSB	= 1
 	LSB	= 0
 	
-	def __init__( self, *, sck = 3, mosi = 4, miso = 5, cs = None, polarity = 0, phase = 0, mode = None, bits = 8, first_bit = MSB ):
+	def __init__( self, *, sck = 3, mosi = 4, miso = 5, cs = None, mode = None, polarity = 0, phase = 0, bits = 8, first_bit = MSB ):
 	
 		#	pin definitions
 		self.sck	= Pin( sck, Pin.OUT )
@@ -28,7 +28,7 @@ class bbSPI:
 		
 		self.sck.value( self.pol )
 		
-		if first_bit == MSB:
+		if first_bit == self.MSB:
 			self.bit_order	= tuple( n for n in range( bits - 1, -1, -1 ) )
 		else:
 			self.bit_order	= tuple( n for n in range( bits ) )
@@ -37,12 +37,14 @@ class bbSPI:
 		if self.cs:
 			self.cs.value( 0 )
 
-		self.mosi	= Pin( mosi, Pin.OUT )
+		self.mosi.init( Pin.OUT )
 	
 		if self.pha:
 			pol	= not self.pol
 			self.sck.value( pol )
-	
+		else:
+			pol	= self.pol
+
 		for n, ourdata in enumerate( send ):
 			r	= 0
 			for i in self.bit_order:
@@ -56,16 +58,20 @@ class bbSPI:
 		if not self.pha:
 			self.sck.value( pol )
 
-		self.mosi	= Pin( mosi, Pin.IN )
+		self.mosi.init( Pin.IN )
 			
 		if self.cs:
 			self.cs.value( 1 )
 			
 def main():
 	spi	= bbSPI( sck = 10, mosi = 11, miso = 12, cs = 13 )
-
+	
+	send_data		= [ 0x00, 0xFF ] + [ n for n in range( 8 ) ]
+	receive_data	= [ 0xFF for _ in range( 10 ) ]
+	
 	while True:
-		spi.write( [ 0x00, 0xFF ] + [ n for n in range( 8 ) ], [ 0xFF for _ in range( 10 ) ] )
+		spi.send_receive_chunks( send_data, receive_data )
+		print( receive_data )
 		sleep_ms( 100 )
 		
 if __name__ == "__main__":
