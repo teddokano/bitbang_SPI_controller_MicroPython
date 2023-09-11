@@ -32,6 +32,8 @@ class bbSPI:
 	def send_receive_chunks( self, send, receive ):
 		if self.cs:
 			self.cs.value( 0 )
+
+		self.mosi	= Pin( mosi, Pin.OUT )
 	
 		if self.pha:
 			pol	= not self.pol
@@ -52,6 +54,8 @@ class bbSPI:
 
 		if self.cs:
 			self.cs.value( 1 )
+			
+		self.mosi	= Pin( mosi, Pin.IN )
 			
 def main():
 	spi	= bbSPI( sck = 10, mosi = 11, miso = 12, cs = 13 )
