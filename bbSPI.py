@@ -48,10 +48,10 @@ class bbSPI:
 		for n, ourdata in enumerate( send ):
 			r	= 0
 			for i in self.bit_order:
-				self.sck.value( not pol )
 				self.mosi.value( (ourdata >> i) & 1 )
-				self.sck.value( pol )
+				self.sck.value( not pol )
 				r	|= self.miso.value() << i
+				self.sck.value( pol )
 			
 			receive[ n ]	= r
 
