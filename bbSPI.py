@@ -5,7 +5,7 @@ class bbSPI:
 	MSB	= 1
 	LSB	= 0
 	
-	def __init__( self, *, sck = 3, mosi = 4, miso = 5, cs = None, mode = None, polarity = 0, phase = 0, bits = 8, first_bit = MSB ):
+	def __init__( self, *, mode = None, polarity = 0, phase = 0, bits = 8, first_bit = MSB, sck = 3, mosi = 4, miso = 5, cs = None ):
 	
 		#	pin definitions
 		self.sck	= Pin( sck, Pin.OUT )
@@ -33,7 +33,7 @@ class bbSPI:
 		else:
 			self.bit_order	= tuple( n for n in range( bits ) )
 		
-	def send_receive_chunks( self, send, receive ):
+	def write_readinto( self, send, receive ):
 		if self.cs:
 			self.cs.value( 0 )
 
@@ -55,8 +55,8 @@ class bbSPI:
 			
 			receive[ n ]	= r
 
-		if not self.pha:
-			self.sck.value( pol )
+		#if not self.pha:
+		self.sck.value( self.pol )
 
 		self.mosi.init( Pin.IN )
 			
@@ -70,7 +70,7 @@ def main():
 	receive_data	= [ 0xFF for _ in range( 10 ) ]
 	
 	while True:
-		spi.send_receive_chunks( send_data, receive_data )
+		spi.write_readinto( send_data, receive_data )
 		print( receive_data )
 		sleep_ms( 100 )
 		
