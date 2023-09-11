@@ -61,7 +61,7 @@ def main():
 	spi	= bbSPI( sck = 10, mosi = 11, miso = 12, cs = 13 )
 
 	while True:
-		spi.write( [ 0x00, 0xFF ] + [ n for n in range( 8 ) ] )
+		spi.write( [ 0x00, 0xFF ] + [ n for n in range( 8 ) ], [ 0xFF for _ in range( 10 ) ] )
 		sleep_ms( 100 )
 		
 if __name__ == "__main__":
