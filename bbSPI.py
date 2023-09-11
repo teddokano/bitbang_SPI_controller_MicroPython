@@ -56,10 +56,10 @@ class bbSPI:
 		if not self.pha:
 			self.sck.value( pol )
 
+		self.mosi	= Pin( mosi, Pin.IN )
+			
 		if self.cs:
 			self.cs.value( 1 )
-			
-		self.mosi	= Pin( mosi, Pin.IN )
 			
 def main():
 	spi	= bbSPI( sck = 10, mosi = 11, miso = 12, cs = 13 )
