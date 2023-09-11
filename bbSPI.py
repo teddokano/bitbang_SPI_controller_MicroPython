@@ -43,11 +43,11 @@ class bbSPI:
 			pol	= not self.pol
 			self.sck.value( pol )
 	
-		for n, (ourdata, indata) in enumerate( zip( send, receive ) ):
+		for n, ourdata in enumerate( send ):
 			r	= 0
 			for i in self.bit_order:
 				self.sck.value( not pol )
-				self.mosi.value( (outchunk >> i) & 1 )
+				self.mosi.value( (ourdata >> i) & 1 )
 				self.sck.value( pol )
 				r	|= self.miso.value() << i
 			
