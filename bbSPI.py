@@ -5,7 +5,7 @@ class bbSPI:
 	MSB	= 1
 	LSB	= 0
 	
-	def __init__( self, *, sck = 3, mosi = 4, miso = 5, cs = None, polarity = 0, phase = 0, bits = 8, first_bit = MSB ):
+	def __init__( self, *, sck = 3, mosi = 4, miso = 5, cs = None, polarity = 0, phase = 0, mode = None, bits = 8, first_bit = MSB ):
 	
 		#	pin definitions
 		self.sck	= Pin( sck, Pin.OUT )
@@ -19,8 +19,12 @@ class bbSPI:
 			self.cs	= None
 
 		#	mode settings
-		self.pol	= polarity
-		self.pha	= phase
+		if mode:
+			self.pol	= (mode >> 1) & 0x1
+			self.pha	=  mode & 0x1
+		else:
+			self.pol	= polarity
+			self.pha	= phase
 		
 		self.sck.value( self.pol )
 		
@@ -39,15 +43,15 @@ class bbSPI:
 			pol	= not self.pol
 			self.sck.value( pol )
 	
-		for i, (ourdata, indata) in enumerate( zip( send, receive ) ):
+		for n, (ourdata, indata) in enumerate( zip( send, receive ) ):
 			r	= 0
 			for i in self.bit_order:
 				self.sck.value( not pol )
-				self._mosi.value( (outchunk >> i) & 1 )
+				self.mosi.value( (outchunk >> i) & 1 )
 				self.sck.value( pol )
-				r	|= self._miso.value() << i
+				r	|= self.miso.value() << i
 			
-			receive[ i ]	= r
+			receive[ n ]	= r
 
 		if not self.pha:
 			self.sck.value( pol )
