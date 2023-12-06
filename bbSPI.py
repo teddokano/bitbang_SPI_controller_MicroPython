@@ -1,5 +1,4 @@
 from	machine	import	Pin
-from	utime	import	sleep_ms
 
 class bbSPI:
 	MSB	= 1
@@ -75,4 +74,5 @@ def main():
 		sleep_ms( 100 )
 		
 if __name__ == "__main__":
+	from	utime	import	sleep_ms
 	main()
