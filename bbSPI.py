@@ -59,6 +59,7 @@ def main():
 	while True:
 		data	= [ 0xAA, 0x55 ]
 		spi.write_readinto( data, data )
+		print( data )
 		sleep_ms( 100 )
 		
 if __name__ == "__main__":
