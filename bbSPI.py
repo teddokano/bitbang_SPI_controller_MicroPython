@@ -4,26 +4,17 @@ class bbSPI:
 	MSB	= 1
 	LSB	= 0
 	
-	def __init__( self, *, mode = None, polarity = 0, phase = 0, bits = 8, first_bit = MSB, sck = 3, mosi = 4, miso = 5, cs = None ):
+	def __init__( self, *, polarity = 0, phase = 0, bits = 8, first_bit = MSB, sck = None, mosi = None, miso = None, cs = None ):
 	
 		#	pin definitions
-		self.sclk	= Pin( sck, Pin.OUT )
-		self.mosi	= Pin( mosi, Pin.IN )
-		self.miso	= Pin( miso, Pin.IN )
+		self.sclk, self.mosi, self.miso, self.cs	= sck, mosi, miso, cs
 		
-		if cs:
-			self.cs	= Pin( cs, Pin.OUT )
+		if self.cs:
 			self.cs.value( 1 )
-		else:
-			self.cs	= None
 
 		#	mode settings
-		if mode:
-			self.pol	= (mode >> 1) & 0x1
-			self.pha	=  mode & 0x1
-		else:
-			self.pol	= polarity
-			self.pha	= phase
+		self.pol	= polarity
+		self.pha	= phase
 		
 		self.sclk.value( self.pol )
 		
@@ -63,14 +54,11 @@ class bbSPI:
 			self.cs.value( 1 )
 			
 def main():
-	spi	= bbSPI( sck = 10, mosi = 11, miso = 12, cs = 13 )
-	
-	send_data		= [ 0x00, 0xFF ] + [ n for n in range( 8 ) ]
-	receive_data	= [ 0xFF for _ in range( 10 ) ]
-	
+	spi	= bbSPI( sck = Pin( 10 ), mosi = Pin( 11 ), miso = Pin( 12 ), cs = Pin( 13 ) )
+
 	while True:
-		spi.write_readinto( send_data, receive_data )
-		print( receive_data )
+		data	= [ 0xAA, 0x55 ]
+		spi.write_readinto( data, data )
 		sleep_ms( 100 )
 		
 if __name__ == "__main__":
