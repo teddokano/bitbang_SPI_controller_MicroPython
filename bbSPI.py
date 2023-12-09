@@ -1,3 +1,8 @@
+"""
+# Lisence
+This project is licensed under the MIT License, see the LICENSE.txt file for details
+https://github.com/teddokano/bitbang_SPI_controller_MicroPython
+"""
 from	machine	import	Pin
 
 class bbSPI:
@@ -9,7 +14,12 @@ class bbSPI:
 		#	pin definitions
 		self.sclk, self.mosi, self.miso, self.cs	= sck, mosi, miso, cs
 		
+		self.mosi.init( Pin.IN )
+		self.miso.init( Pin.IN )
+		self.sclk.init( Pin.OUT )
+		
 		if self.cs:
+			self.cs.init( Pin.OUT )
 			self.cs.value( 1 )
 
 		#	mode settings
