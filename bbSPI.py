@@ -1,6 +1,5 @@
 """
-# Lisence
-This project is licensed under the MIT License, see the LICENSE.txt file for details
+This project is licensed under the MIT License, see LICENSE.txt file for details in 
 https://github.com/teddokano/bitbang_SPI_controller_MicroPython
 """
 from	machine	import	Pin
